@@ -10,10 +10,8 @@ data class BrokerageRule(
     val limitAmount: Long? = null
 ) {
     fun calcMaxBrokerage(price: Long): Long {
-        if (limitAmount == null) {
-            return multiplyPercent(price)
-        }
-        return multiplyPercent(price).coerceAtMost(limitAmount)
+        return if (limitAmount == null) multiplyPercent(price)
+        else multiplyPercent(price).coerceAtMost(limitAmount)
     }
 
     private fun multiplyPercent(price: Long): Long = floor(brokeragePercent / 100 * price).toLong()
