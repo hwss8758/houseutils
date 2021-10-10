@@ -1,6 +1,8 @@
 package com.example.houseutils.service
 
 import com.example.houseutils.entity.Apartment
+import com.example.houseutils.exception.ErrorCode
+import com.example.houseutils.exception.HouseUtilsException
 import com.example.houseutils.repository.ApartmentRepository
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
@@ -17,6 +19,8 @@ class ApartmentService(
     }
 
     fun getPriceOrThrow(apartmentId: Long): Long {
-        return apartmentRepository.findById(apartmentId).get().price
+        return apartmentRepository.findById(apartmentId)
+            .orElseThrow { HouseUtilsException(ErrorCode.ENTITY_NOT_FOUND) }
+            .price
     }
 }
