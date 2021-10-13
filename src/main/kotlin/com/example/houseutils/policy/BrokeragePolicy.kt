@@ -1,11 +1,15 @@
 package com.example.houseutils.policy
 
+import com.example.houseutils.exception.ErrorCode
+import com.example.houseutils.exception.HouseUtilsException
+
 interface BrokeragePolicy {
 
-    fun createBrokerageRule(price: Long): BrokerageRule
+    fun getRules(): List<BrokerageRule>
 
     fun calculate(price: Long): Long {
-        val rule = createBrokerageRule(price)
-        return rule.calcMaxBrokerage(price)
+        val brokerageRule = getRules().find { rule -> price < rule.lessThan }
+            ?: throw HouseUtilsException(ErrorCode.INTERNAL_ERROR)
+        return brokerageRule.calcMaxBrokerage(price)
     }
 }

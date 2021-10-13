@@ -5,17 +5,19 @@ package com.example.houseutils.policy
  */
 class PurchaseBrokeragePolicy : BrokeragePolicy {
 
-    override fun createBrokerageRule(price: Long): BrokerageRule {
-        return if (price < 50_000_000) {
-            BrokerageRule(brokeragePercent = 0.6, limitAmount = 250_000L)
-        } else if (price < 200_000_000) {
-            BrokerageRule(brokeragePercent = 0.5, limitAmount = 800_000L)
-        } else if (price < 600_000_000) {
-            BrokerageRule(brokeragePercent = 0.4)
-        } else if (price < 900_000_000) {
-            BrokerageRule(brokeragePercent = 0.5)
-        } else {
-            BrokerageRule(brokeragePercent = 0.9)
-        }
+    private val rules: List<BrokerageRule>
+
+    init {
+        rules = listOf(
+            BrokerageRule(lessThan = 50_000_000L, brokeragePercent = 0.6, limitAmount = 250_000L),
+            BrokerageRule(lessThan = 200_000_000L, brokeragePercent = 0.5, limitAmount = 800_000L),
+            BrokerageRule(lessThan = 600_000_000L, brokeragePercent = 0.4),
+            BrokerageRule(lessThan = 900_000_000L, brokeragePercent = 0.5),
+            BrokerageRule(lessThan = Long.MAX_VALUE, brokeragePercent = 0.9)
+        )
+    }
+
+    override fun getRules(): List<BrokerageRule> {
+        return rules
     }
 }
